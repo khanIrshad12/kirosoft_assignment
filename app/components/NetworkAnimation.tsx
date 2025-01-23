@@ -197,15 +197,22 @@ export default function NetworkAnimation() {
                     {/* Network Container */}
                     <g className="network-container">
                         {/* AI Node */}
-                        <motion.g className="ai-node" transform="translate(550, 40)" variants={aiNodeVariants}>
+                            {/* AI Node */}
+                            <motion.g 
+                            className="ai-node" 
+                            transform="translate(550, 40)" 
+                            variants={aiNodeVariants}
+                            initial="hidden"
+                            animate="visible"
+                        >
                             {/* AI Node Pins */}
                             <g className="pins">
                                 {/* Left Pins */}
                                 {[10, 30, 50, 68].map((y, i) => (
                                     <motion.rect
-                                        key={i}
-                                        x="-15"
-                                        y={y}
+                                        key={`left-pin-${i}`}
+                                        x="535"
+                                        y={y+40}
                                         width="20"
                                         height="5"
                                         rx="2"
@@ -213,16 +220,16 @@ export default function NetworkAnimation() {
                                         fill="#2c2c2c"
                                         stroke="#4a4a4a"
                                         strokeWidth="3"
-                                        variants={pinVariants}
-
+                                        variants={getLeftPinVariants(i)}
                                     />
                                 ))}
+                                
                                 {/* Right Pins */}
                                 {[10, 30, 50, 68].map((y, i) => (
                                     <motion.rect
-                                        key={i}
-                                        x="73"
-                                        y={y}
+                                        key={`right-pin-${i}`}
+                                        x="623"
+                                        y={y+40}
                                         width="20"
                                         height="5"
                                         rx="2"
@@ -230,15 +237,16 @@ export default function NetworkAnimation() {
                                         fill="#2c2c2c"
                                         stroke="#4a4a4a"
                                         strokeWidth="3"
-                                        variants={pinVariants}
+                                        variants={getRightPinVariants(i)}
                                     />
                                 ))}
+                                
                                 {/* Bottom Pins */}
                                 {[10, 30, 50, 68].map((x, i) => (
                                     <motion.rect
-                                        key={i}
-                                        x={x}
-                                        y="72"
+                                        key={`bottom-pin-${i}`}
+                                        x={x+550}
+                                        y="115"
                                         width="5"
                                         height="20"
                                         rx="2"
@@ -246,18 +254,34 @@ export default function NetworkAnimation() {
                                         fill="#2c2c2c"
                                         stroke="#4a4a4a"
                                         strokeWidth="3"
-                                        variants={pinVariants}
+                                        variants={getBottomPinVariants(i)}
                                     />
                                 ))}
                             </g>
 
                             {/* AI Box */}
-                            <rect width="80" height="80" rx="10" ry="10" fill="#2c2c2c" stroke="#4a4a4a" strokeWidth="3" />
-                            <text x="27" y="50" fontFamily="Arial" fontSize="28" fill="url(#gradientt)" fontWeight="bold" >
+                            <rect 
+                                width="80" 
+                                height="80" 
+                                rx="10" 
+                                ry="10" 
+                                fill="#2c2c2c" 
+                                stroke="#4a4a4a" 
+                                strokeWidth="3" 
+                                x={550}
+                                y={40}
+                            />
+                            <text 
+                                fontFamily="Arial" 
+                                fontSize="28" 
+                                fill="url(#gradientt)" 
+                                fontWeight="bold"
+                                x={575}
+                                y={90}
+                            >
                                 AI
                             </text>
                         </motion.g>
-
                         {/* Left Side Nodes */}
                         <g className="left-nodes">
                             {/* A Node */}
@@ -444,25 +468,77 @@ export default function NetworkAnimation() {
     )
 }
 
+
+
+
 const aiNodeVariants = {
-    hidden: { opacity: 0 },
+    hidden: { 
+        opacity: 0, 
+        scale: 0,
+     
+    },
     visible: {
         opacity: 1,
+        scale: 1,
         transition: {
-            duration: 0.5,
+            duration: 1,
+            ease: "easeOut",
             when: "beforeChildren",
-            staggerChildren: 0.1,
+            delayChildren: 0.5,
         },
     },
 }
 
-const pinVariants = {
-    hidden: { opacity: 0 },
+const getLeftPinVariants = (index: number) => ({
+    hidden: { 
+        opacity: 0, 
+        x: 20,
+    },
     visible: {
         opacity: 1,
-        transition: { duration: 0.3 },
+        x: 0,
+        transition: {
+            delay: 0.8 + index * 0.1,
+            duration: 0.3,
+            type: "spring",
+            stiffness: 120,
+        },
     },
-}
+})
+
+const getRightPinVariants = (index: number) => ({
+    hidden: { 
+        opacity: 0, 
+        x: -20,
+    },
+    visible: {
+        opacity: 1,
+        x: 0,
+        transition: {
+            delay: 1 + index * 0.1,
+            duration: 0.3,
+            type: "spring",
+            stiffness: 120,
+        },
+    },
+})
+
+const getBottomPinVariants = (index: number) => ({
+    hidden: { 
+        opacity: 0, 
+        y: -20,
+    },
+    visible: {
+        opacity: 1,
+        y: 0,
+        transition: {
+            delay: 1.2 + index * 0.1,
+            duration: 0.3,
+            type: "spring",
+            stiffness: 120,
+        },
+    },
+})
 
 const drawLineVariants = {
     hidden: { pathLength: 0, pathOffset: 1 },
@@ -470,8 +546,8 @@ const drawLineVariants = {
         pathLength: 1,
         pathOffset: 0,
         transition: {
-            delay: 2.5,
-            duration: 1.5,
+            delay: 3.1,
+            duration: 2.5,
             ease: "easeInOut",
         },
     },

@@ -37,7 +37,7 @@ export default function MainContent() {
                 duration={3}
                 width={80}
                 height={70}
-                repeatDelay={1}
+               
 
                 className={cn(
                     "[mask-image:radial-gradient(700px_circle_at_center,white,transparent)]",
